@@ -1,176 +1,167 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+// npm init
+//np, i express
+const express = require("express")
+const app = express()
+const port = 3000
+app.use(express.json())
 
-    <script>
-        function toggleSenha() {
-            const input = document.getElementById("senha");
-            const btn = document.querySelector("button");
+//npm i mysql2
+const db = require("./db")
 
-            if (input.type === "password") {
-                input.type = "text";
-                btn.textContent = "Esconder";
-            } else {
-                input.type = "password";
-                btn.textContent = "Mostrar";
-            }
+//npm i bcrypt
+const bcrypt = require("bcrypt")
+
+
+//AQUI FAZEMOS AS OPERACOES DO BD
+app.post("/Cliente", async (req, res) => {
+    try{
+        const dados = req.body
+        const senhaCrypt = bcrypt.hashSync(dados.senha, 10)
+        dados.senha = senhaCrypt
+
+        const resultado = await db.pool.query(`
+        INSERT INTO Cliente(
+            nome, cpf, senha, celular, email
+          ) VALUES(?, ?, ?, ?, ?);`,
+          [dados.nome, dados.cpf, dados.senha, dados.celular, dados.email]
+        )
+        res.status(201).json({mensagem: "Cliente cadastrado, id = " + resultado[0].insertId})
+
+    } catch (error) {
+        res.status(500).json({erro: error.message})
+    }
+})
+
+app.post("/login",async (req, res) => {
+    try{
+    const user = req.body
+    const resultado = await db.pool.query(`
+        SELECT email , senha FROM Cliente WHERE email =  ?`,
+          [user.email]
+    )
+    const dados_db = resultado[0][0]
+
+    if(!dados_db) {
+        return res.status(401).json({mensagem: "Email ou senha inválido!"})
+    }
+    const senhaValida = bcrypt.compare(user.senha, dados_db.senha)
+    if (senhaValida){}
+    if (user.senha == dados_db.senha){
+        return res.status(200).json({mensagem:"Login realizado com sucesso!"})
+    } else{
+        return res.status(401).json({mensagem:"Email ou senha inválido!"})
+    }
+    } catch (error) {
+        res.status(500).json({erro: error.message})
+    }})
+
+app.get("/Cliente", async (req , res)=>{
+    try {
+        const [clientes] = await db.pool.query(`
+        SELECT id, nome, cpf, celular, email
+        FROM Cliente
+    `)
+
+    res.status(200).json(clientes)
+
+    } catch (error) {
+        res.status(500).json({erro: error.message})
+    }
+})
+
+app.get("/Cliente/:id", async (req, res) => {
+    try {
+
+        const id = req.params.id
+
+        const [clientes] = await db.pool.query(`
+            SELECT id, nome, cpf, celular, email
+            FROM Cliente
+            WHERE id = ?
+        `, [id])
+
+        if (clientes.length === 0) {
+            return res.status(404).json({
+                mensagem: "Cliente não encontrado"
+            })
         }
-    </script>
-</head>
 
-<body>
-    <nav class="navbar navbar-expand-lg" style="background-color: #ffffff; border-bottom: 2px solid #d4af37;">
-        <div class="container-fluid">
-    
-            <a class="navbar-brand" href="#" style="color: #000000; font-weight: bold;">
-                BARBEARIA VICENTINA
-            </a>
-    
-            <button 
-                class="navbar-toggler" 
-                type="button" 
-                data-bs-toggle="collapse" 
-                data-bs-target="#navbarSupportedContent" 
-                aria-controls="navbarSupportedContent" 
-                aria-expanded="false" 
-                aria-label="Toggle navigation"
-                style="border-color: #d4af37;"
-            >
-                <span class="navbar-toggler-icon"></span>
-            </button>
-    
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-    
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#" style="color: #000000;">
-                            Home
-                        </a>
-                    </li>
-    
-                    <li class="nav-item">
-                        <a class="nav-link" href="./login.html" style="color: #000000;">
-                            Login
-                        </a>
-                    </li>
-    
-                    <li class="nav-item dropdown">
-                        <a 
-                            class="nav-link dropdown-toggle" 
-                            href="#" 
-                            role="button" 
-                            data-bs-toggle="dropdown" 
-                            aria-expanded="false"
-                            style="color: #000000;"
-                        >
-                            Serviços
-                        </a>
-    
-                        <ul class="dropdown-menu" style="background-color: #ffffff; border: 1px solid #d4af37;">
-                            <li>
-                                <a class="dropdown-item" href="#" style="color: #000000;">
-                                    Corte de Cabelo
-                                </a>
-                            </li>
-    
-                            <li>
-                                <a class="dropdown-item" href="#" style="color: #000000;">
-                                    Barba
-                                </a>
-                            </li>
-    
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-    
-                            <li>
-                                <a class="dropdown-item" href="#" style="color: #000000;">
-                                    Corte + Barba
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-    
-                <form class="d-flex" role="search">
-    
-                    <input 
-                        class="form-control me-2" 
-                        type="search" 
-                        placeholder="Pesquisar" 
-                        aria-label="Pesquisar"
-                        style="
-                            background-color: #ffffff;
-                            color: #000000;
-                            border: 1px solid #000000;
-                        "
-                    />
-    
-                    <button 
-                        class="btn" 
-                        type="submit"
-                        style="
-                            background-color: #d4af37;
-                            color: #000000;
-                            border: 1px solid #d4af37;
-                            font-weight: bold;
-                        "
-                    >
-                        Pesquisar
-                    </button>
-    
-                </form>
-    
-            </div>
-        </div>
-    </nav>
-    
-   
+        res.status(200).json(clientes[0])
 
-    <div>
-        <form>
-            <p><main class="container"></p>
-               <h1>LOGIN</h1>
-                <label for="email">Email</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    required 
-                    placeholder="digiteseuemail@email.com" >
-                
-                <label for="senha">Senha</label>
-                <input 
-                    type="password" 
-                    id="senha" 
-                    required 
-                    placeholder="Digite aqui sua senha"
-                >
+    } catch (error) {
+        res.status(500).json({
+            erro: error.message
+        })
+    }
+})
 
-                <button type="button" onclick="toggleSenha()">
-                    Mostrar
-                </button>
+app.delete("/Cliente/:id", async (req, res) => {
+    try {
 
-                <input 
-                    type="submit" 
-                    value="login"
-                >
-                <p>Não tem conta?</p>
-                <p><a class="link-offset-2 link-underline link-underline-opacity-25" href="./cadastro.html">CRIE UMA CONTA</a></p>
+        const id = req.params.id
+
+        const [resultado] = await db.pool.query(`
+            DELETE FROM Cliente
+            WHERE id = ?
+        `, [id])
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensagem: "Cliente não encontrado"
+            })
+        }
+
+        res.status(200).json({
+            mensagem: "Cliente excluído com sucesso"
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            erro: error.message
+        })
+    }
+})
 
 
+app.put("/Cliente/:id", async (req, res) => {
+    try {
 
-                <div id="toast" class="toast"></div>
+        const id = req.params.id
+        const dados = req.body
 
-            </main>
-        </form>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        const [resultado] = await db.pool.query(`
+            UPDATE Cliente
+            SET nome = ?,
+                cpf = ?,
+                celular = ?,
+                email = ?
+            WHERE id = ?
+        `, [
+            dados.nome,
+            dados.cpf,
+            dados.celular,
+            dados.email,
+            id
+        ])
 
-</body>
-</html>
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensagem: "Cliente não encontrado"
+            })
+        }
+
+        res.status(200).json({
+            mensagem: "Cliente alterado com sucesso"
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            erro: error.message
+        })
+    }
+})
+
+
+app.listen(port, () => {
+    console.log("API rodando na porta "+ port)
+})
