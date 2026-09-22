@@ -32,29 +32,34 @@ app.post("/Cliente", async (req, res) => {
     }
 })
 
-app.post("/login",async (req, res) => {
-    try{
-    const user = req.body
-    const resultado = await db.pool.query(`
-        SELECT email , senha FROM Cliente WHERE email =  ?`,
-          [user.email]
-    )
-    const dados_db = resultado[0][0]
+app.post("/login", async (req,res) => {
+    try {
+        const user = req.body
+        const resultado = await db.pool.query(
+            "SELECT id, nome, email, senha FROM Cliente WHERE email = ?", [user.email]
+        )
+        const dados_bd = resultado[0][0]
+        if(!dados_bd) {
+            return res.status(401).json({msg: "Email não cadastrado!"})
+        }
 
-    if(!dados_db) {
-        return res.status(401).json({mensagem: "Email ou senha inválido!"})
-    }
-    const senhaValida = bcrypt.compare(user.senha, dados_db.senha)
-    if (senhaValida){}
-    if (user.senha == dados_db.senha){
-        return res.status(200).json({mensagem:"Login realizado com sucesso!"})
-    } else{
-        return res.status(401).json({mensagem:"Email ou senha inválido!"})
-    }
+        const senha_valida = await bcrypt.compare(user.senha, dados_bd.senha)
+
+        if(!senha_valida) {
+            return res.status(401).json({msg: "Credenciais inválidas!"})
+        }
+
+        const payload = {
+            id: dados_bd.id,
+            email: dados_bd.email
+        } 
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1m' })
+        return res.status(200).json({nome: dados_bd.nome, token: token})
+
     } catch (error) {
         res.status(500).json({erro: error.message})
-    }})
-
+    }
+})
 app.get("/Cliente", async (req , res)=>{
     try {
         const [clientes] = await db.pool.query(`
@@ -69,22 +74,22 @@ app.get("/Cliente", async (req , res)=>{
     }
 })
 
-app.get("/Cliente/:id", async (req, res) => {
+app.get("/Cliente/perfil", autenticar, async (req, res) => {
     try {
 
         const id = req.params.id
 
         const [clientes] = await db.pool.query(`
-            SELECT id, nome, cpf, celular, email
-            FROM Cliente
-            WHERE id = ?
-        `, [id])
+            SELECT * FROM cliente WHERE id = ?`, [id])
 
         if (clientes.length === 0) {
             return res.status(404).json({
                 mensagem: "Cliente não encontrado"
             })
         }
+        const cliente = resultado[0][0]
+        delete cliente.senha
+        res.status(500).json
 
         res.status(200).json(clientes[0])
 
@@ -162,6 +167,22 @@ app.put("/Cliente/:id", async (req, res) => {
 })
 
 
+
+
+function autenticar(req, res, next){
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    if (token == null){
+        return res.status(401).json({erro: "Token não enviado, usar Authorization Bearer <token>"})
+    }
+    jwt.verify(token, process.env.JWT_SECRET, (err, usuario) => {
+        if (err) return res.status(403).json({erro: "Token inválido"})
+        req.usuario = usuario
+        next()
+    })   
+}
 app.listen(port, () => {
     console.log("API rodando na porta "+ port)
 })
+
+//colocar arquivo .env na prox aula
