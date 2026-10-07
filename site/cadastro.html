@@ -215,7 +215,7 @@
 
             const dados = pegar_dados()
             try{
-                const resposta = await fetch("http://10.216.243.142:3000/cliente",{
+                const resposta = await fetch("http://localhost:3000/cliente",{
                         method: "POST",
                         headers: {"Content-Type": "application/json"},
                         body: JSON.stringify(dados)
