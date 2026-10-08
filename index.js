@@ -30,7 +30,7 @@ app.post("/Cliente", async (req, res) => {
         dados.senha = senhaCrypt
 
         const resultado = await db.pool.query(`
-        INSERT INTO Cliente(
+        INSERT INTO cliente(
             nome, cpf, senha, celular, email
           ) VALUES(?, ?, ?, ?, ?);`,
           [dados.nome, dados.cpf, dados.senha, dados.celular, dados.email]
