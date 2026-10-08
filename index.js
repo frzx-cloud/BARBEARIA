@@ -21,9 +21,22 @@ const jwt = require("jsonwebtoken")
 const cors = require("cors")
 app.use(cors())
 
+app.use((req,res,next) => {
+
+    console.log('---------------------------------')
+    console.log(req.body)
+        console.log(req.url)
+        console.log(req.method)
+
+    console.log('---------------------------------')
+
+    next()
+})
+
 
 //AQUI FAZEMOS AS OPERACOES DO BD
-app.post("/Cliente", async (req, res) => {
+app.post("/cliente", async (req, res) => {
+    console.log('caiu aqui')
     try{
         const dados = req.body
         const senhaCrypt = bcrypt.hashSync(dados.senha, 10)
@@ -84,7 +97,7 @@ app.get("/Cliente", async (req , res)=>{
     }
 })
 
-app.get("/Cliente/perfil", autenticar, async (req, res) => {
+app.get("/cliente/perfil", autenticar, async (req, res) => {
     try {
 
         const id = req.params.id
@@ -110,7 +123,7 @@ app.get("/Cliente/perfil", autenticar, async (req, res) => {
     }
 })
 
-app.delete("/Cliente/:id", async (req, res) => {
+app.delete("/cliente/:id", async (req, res) => {
     try {
 
         const id = req.params.id
@@ -138,7 +151,7 @@ app.delete("/Cliente/:id", async (req, res) => {
 })
 
 
-app.put("/Cliente/:id", async (req, res) => {
+app.put("/cliente/:id", async (req, res) => {
     try {
 
         const id = req.params.id
