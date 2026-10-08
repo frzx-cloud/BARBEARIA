@@ -188,6 +188,7 @@ input[type="submit"]:hover {
 
     h1 {
         font-size: 28px;
+        
     }
 
     .container {
@@ -197,4 +198,145 @@ input[type="submit"]:hover {
 
 p{
     text-align: center;
+}
+
+
+/* ============================= */
+/* ESTILOS DA PÁGINA INICIAL     */
+/* ============================= */
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.nav-link:hover {
+    color: #d4af37 !important;
+}
+
+.hero {
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.hero h1 {
+    color: #d4af37;
+    font-size: 45px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+.btn-dourado {
+    background-color: #d4af37;
+    color: #000;
+    border: 2px solid #d4af37;
+    padding: 10px 25px;
+    font-weight: bold;
+}
+
+.btn-dourado:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+#servicos {
+    padding: 60px 20px;
+}
+
+.titulo-secao {
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+
+.titulo-secao span {
+    color: #d4af37;
+}
+
+.card-servico {
+    border: 2px solid #d4af37;
+    padding: 30px 20px;
+    text-align: center;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.card-servico h3 {
+    font-weight: bold;
+}
+
+.card-servico p {
+    color: #555;
+}
+
+.preco {
+    color: #d4af37;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.sobre {
+    background-color: #000;
+    color: #fff;
+    padding: 60px 20px;
+}
+
+.sobre h2 {
+    color: #d4af37;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.sobre p {
+    line-height: 1.6;
+}
+
+.contato {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.contato h2 {
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.contato p {
+    margin: 8px;
+}
+
+#user-info {
+    font-weight: bold;
+}
+
+footer {
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    padding: 25px;
+    border-top: 2px solid #d4af37;
+}
+
+footer p {
+    margin: 5px;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 70px 20px;
+    }
+
+    .hero h1 {
+        font-size: 35px;
+    }
+
+    .hero p {
+        font-size: 17px;
+    }
 }

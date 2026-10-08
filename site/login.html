@@ -84,36 +84,6 @@
                         </ul>
                     </li>
                 </ul>
-    
-                <form class="d-flex" role="search">
-    
-                    <input 
-                        class="form-control me-2" 
-                        type="search" 
-                        placeholder="Pesquisar" 
-                        aria-label="Pesquisar"
-                        style="
-                            background-color: #ffffff;
-                            color: #000000;
-                            border: 1px solid #000000;
-                        "
-                    />
-    
-                    <button 
-                        class="btn" 
-                        type="submit"
-                        style="
-                            background-color: #d4af37;
-                            color: #000000;
-                            border: 1px solid #d4af37;
-                            font-weight: bold;
-                        "
-                    >
-                        Pesquisar
-                    </button>
-    
-                </form>
-    
             </div>
         </div>
     </nav>
@@ -121,7 +91,7 @@
    
 
     <div>
-        <form>
+        <form id="form_login">
             <p><main class="container"></p>
                <h1>LOGIN</h1>
                 <label for="email">Email</label>
@@ -143,7 +113,7 @@
                     Mostrar
                 </button>
 
-                <input 
+                <input id="btn_enviar"
                     type="submit" 
                     value="login"
                 >
@@ -152,7 +122,17 @@
 
 
 
-                <div id="toast" class="toast"></div>
+                 <!-- ALERTA TOAST -->
+        <div class="position-fixed" style="top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1050;">
+            <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                <div class="d-flex">
+                    <div class="toast-body" id="toast-message">
+                        Mensagem
+                    </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+            </div>
+        </div>
+        <!-- FIM ALERTA TOAST -->
 
             </main>
         </form>
@@ -213,5 +193,7 @@
             }
         })
    </script>
+
+   <script src="./pages.js"></script>
 </body>
 </html>
