@@ -51,14 +51,14 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
     
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#" style="color: #000000;">
+                        <a class="nav-link active" aria-current="page" href="./index.html" style="color: #000000;">
                             Home
                         </a>
                     </li>
     
                     <li class="nav-item">
-                        <a class="nav-link" href="#" style="color: #000000;">
-                            Link
+                        <a id="nav-login" class="nav-link" href="./login.html" style="color: #000000;">
+                            Login
                         </a>
                     </li>
     
@@ -99,10 +99,20 @@
                         </ul>
                     </li>
                 </ul>
-                </form>
-    
+                <div class="dropdown m-3">
+                    <button id="user-info" class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: none">
+                        Opções
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="cadastro.html">Perfil</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="logout()">Sair</a></li>
+                    </ul>
+                </div>
+             
             </div>
         </div>
+         
     </nav>
     
     
@@ -150,10 +160,6 @@
                     required 
                     placeholder="Digite aqui sua senha"
                 >
-
-                <button type="button" onclick="toggleSenha()">
-                    Mostrar
-                </button>
 
                 <input 
                     type="submit"

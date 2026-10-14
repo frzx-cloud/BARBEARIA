@@ -42,7 +42,7 @@
                     </li>
     
                     <li class="nav-item">
-                        <a class="nav-link" href="./login.html" style="color: #000000;">
+                        <a id="nav-login" class="nav-link" href="./login.html" style="color: #000000;">
                             Login
                         </a>
                     </li>
@@ -84,10 +84,21 @@
                         </ul>
                     </li>
                 </ul>
+                <div class="dropdown m-3">
+                    <button id="user-info" class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: none">
+                        Opções
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="cadastro.html">Perfil</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="logout()">Sair</a></li>
+                    </ul>
+                </div>
+             
             </div>
         </div>
+         
     </nav>
-    
    
 
     <div>
@@ -108,10 +119,6 @@
                     required 
                     placeholder="Digite aqui sua senha"
                 >
-
-                <button type="button" onclick="toggleSenha()">
-                    Mostrar
-                </button>
 
                 <input id="btn_enviar"
                     type="submit" 

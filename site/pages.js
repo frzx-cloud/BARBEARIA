@@ -24,7 +24,7 @@ function atualizar_navbar() {
         btn_user_info.style.display = "inline"
         btn_user_info.innerText= "Olá, " + nome.split(" ")[0]
     } else {
-        nav_login.style.display = "inline"
+        nav_login.style.display = "block"
         btn_user_info.style.display = "none"
     }
 }
